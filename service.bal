@@ -3,12 +3,18 @@ import ballerinax/exchangerates;
 import ramith/countryprofile;
 import ballerina/http;
 
+
+function Hello() returns error? {
+    log:printInfo("new request:");
+}
+
 # A service representing a network-accessible API
 # bound to port `9090`.
 @display {
     label: "rateconvert",
     id: "rateconvert-311bc702-c4cb-4836-abde-a377e04bfe2d"
 }
+
 service / on new http:Listener(9090) {
     @display {
         label: "Exchange Rates",
@@ -33,24 +39,11 @@ service / on new http:Listener(9090) {
     }
 
     resource function get convert(decimal amount = 1.0, string target = "AUD", string base = "USD") returns json|error {
-
         log:printInfo("new request:", base = base, target = target, amount = amount);
-         countryprofile:Currency getCurrencyCodeResponse = check self.countryprofileEp->getCurrencyCode(code = target);
-        // exchangerates:CurrencyExchangeInfomation getExchangeRateForResponse = check self.exchangeratesEp->getExchangeRateFor(apikey = exchangeRateAPIKey, baseCurrency = base);
-
-        // decimal exchangeRate = <decimal>getExchangeRateForResponse.conversion_rates[target];
-
-        // decimal convertedAmount = amount * exchangeRate;
-
-        // PricingInfo pricingInfo = {
-        //     currencyCode: target,
-        //     displayName: getCurrencyCodeResponse.displayName,
-        //     amount: convertedAmount
-        // };
-
-        // return pricingInfo;
-
-        return {};
+        countryprofile:Currency _ = check self.countryprofileEp->getCurrencyCode(code = target);
+        json a = {a: 1};
+        error? e = Hello();
+        return e;
     }
 }
 
@@ -63,3 +56,4 @@ type PricingInfo record {
 configurable string clientId = ?;
 configurable string clientSecret = ?;
 configurable string exchangeRateAPIKey = ?;
+
